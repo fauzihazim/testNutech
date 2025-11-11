@@ -26,7 +26,7 @@ services:
   app2:
     build: .
     ports:
-      - "3001:3000"
+      - "3001:3001"
     environment:
       - HOST=mysql
       - USER=root
@@ -40,7 +40,7 @@ services:
       mysql:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      test: ["CMD", "curl", "-f", "http://localhost:3001/"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -70,7 +70,6 @@ services:
     depends_on:
       - app1
       - app2
-      - app3
 
 volumes:
   mysql_data:
