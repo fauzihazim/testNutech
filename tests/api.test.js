@@ -233,7 +233,15 @@ describe('Information API', () => {
 });
 
 describe('Transaction API', () => {
-
+  test('Get Balance success', async () => {
+    const res = await req(app)
+      .get('/balance')
+      .set('Authorization', `Bearer ${token}`);
+    assert.equal(res.statusCode, 200);
+    assert.equal(res.body.status, 0);
+    assert.equal(res.body.message, "Get Balance Berhasil");
+    assert.notEqual(res.body.data.balance, null);
+  });
 });
 
 describe('Transaction History API', () => {
@@ -285,12 +293,40 @@ describe('Transaction History API', () => {
     assert.equal(res.body.message, "Token tidak tidak valid atau kadaluwarsa");
     assert.equal(res.body.data, null);
   });
+  test('Transaksi Success', async () => {
+    const res = await req(app)
+      .post('/transaction')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ service_code: "PULSA" });
+    assert.equal(res.statusCode, 200);
+    assert.equal(res.body.status, 0);
+    assert.equal(res.body.message, "Get Balance Berhasil");
+    assert.notEqual(res.body.data, null);
+  });
+  test('Transaksi Failed Layanan Tidak Ada', async () => {
+    const res = await req(app)
+      .post('/transaction')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ service_code: "Layanan Tidak Ada" });
+    assert.equal(res.statusCode, 400);
+    assert.equal(res.body.status, 102);
+    assert.equal(res.body.message, "Service ataus Layanan tidak ditemukan");
+    assert.equal(res.body.data, null);
+  });
+  test('Transaksi Failed Unauthorized', async () => {
+    const res = await req(app)
+      .post('/transaction')
+      .set('Authorization', `Bearer ${token} + 1`)
+      .send({ service_code: "PULSA" });
+    assert.equal(res.statusCode, 401);
+    assert.equal(res.body.status, 108);
+    assert.equal(res.body.message, "Token tidak tidak valid atau kadaluwarsa");
+    assert.equal(res.body.data, null);
+  });
   test('Transaction History success', async () => {
     const res = await req(app)
       .get('/transaction/history')
       .set('Authorization', `Bearer ${token}`);
-    console.log(res.status, res.body);
-      
     assert.equal(res.statusCode, 200);
     assert.equal(res.body.status, 0);
     assert.equal(res.body.message, "Get History Berhasil");
