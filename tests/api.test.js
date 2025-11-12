@@ -203,11 +203,6 @@ describe('Membership API', () => {
   });
 });
 
-// test('GET /banner returns JSON', async () => {
-//   const res = await req(app).get('/banner');
-//   assert.equal(res.statusCode, 200);
-//   assert.ok(res.body.message);
-// });
 describe('Information API', () => {
   test('Banner success', async () => {
     const res = await req(app)
@@ -237,8 +232,88 @@ describe('Information API', () => {
   });
 });
 
+describe('Transaction API', () => {
+
+});
+
+describe('Transaction History API', () => {
+  test('Get Balance success', async () => {
+    const res = await req(app)
+      .get('/balance')
+      .set('Authorization', `Bearer ${token}`);
+    assert.equal(res.statusCode, 200);
+    assert.equal(res.body.status, 0);
+    assert.equal(res.body.message, "Get Balance Berhasil");
+    assert.notEqual(res.body.data.balance, null);
+  });
+  test('Get Balance failed Unauthorized', async () => {
+    const res = await req(app)
+      .get('/balance')
+      .set('Authorization', `Bearer ${token} + 1`);
+    assert.equal(res.statusCode, 401);
+    assert.equal(res.body.status, 108);
+    assert.equal(res.body.message, "Token tidak tidak valid atau kadaluwarsa");
+    assert.equal(res.body.data, null);
+  });
+  test('Topup success', async () => {
+    const res = await req(app)
+      .post('/topup')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ top_up_amount: 100000 });
+    assert.equal(res.statusCode, 200);
+    assert.equal(res.body.status, 0);
+    assert.equal(res.body.message, "Top Up Balance berhasil");
+    assert.notEqual(res.body.data.balance, null);
+  });
+  test('Topup failed Top Up lebih kecil dari 0', async () => {
+    const res = await req(app)
+      .post('/topup')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ top_up_amount: -1 });
+    assert.equal(res.statusCode, 400);
+    assert.equal(res.body.status, 102);
+    assert.equal(res.body.message, "Paramter amount hanya boleh angka dan tidak boleh lebih kecil dari 0");
+    assert.equal(res.body.data, null);
+  });
+  test('Topup failed Unauthorized', async () => {
+    const res = await req(app)
+      .post('/topup')
+      .set('Authorization', `Bearer ${token} + 1`)
+      .send({ top_up_amount: 100000 });
+    assert.equal(res.statusCode, 401);
+    assert.equal(res.body.status, 108);
+    assert.equal(res.body.message, "Token tidak tidak valid atau kadaluwarsa");
+    assert.equal(res.body.data, null);
+  });
+  test('Transaction History success', async () => {
+    const res = await req(app)
+      .get('/transaction/history')
+      .set('Authorization', `Bearer ${token}`);
+    console.log(res.status, res.body);
+      
+    assert.equal(res.statusCode, 200);
+    assert.equal(res.body.status, 0);
+    assert.equal(res.body.message, "Get History Berhasil");
+    assert.notEqual(res.body.data, null);
+  });
+  test('Transaction History Failed Unauthorized', async () => {
+    const res = await req(app)
+      .get('/transaction/history')
+      .set('Authorization', `Bearer ${token} + 1`);
+    assert.equal(res.statusCode, 401);
+    assert.equal(res.body.status, 108);
+    assert.equal(res.body.message, "Token tidak tidak valid atau kadaluwarsa");
+    assert.equal(res.body.data, null);
+  });
+})
+
 test.after(async () => {
+  await conn.execute('SET FOREIGN_KEY_CHECKS = 0');
   await conn.execute('DELETE FROM users');
   await conn.execute('ALTER TABLE users AUTO_INCREMENT = 1');
+  await conn.execute('DELETE FROM topup');
+  await conn.execute('ALTER TABLE topup AUTO_INCREMENT = 1');
+  await conn.execute('DELETE FROM transactions');
+  await conn.execute('ALTER TABLE transactions AUTO_INCREMENT = 1');
   await conn.end();
 });
