@@ -13,7 +13,7 @@ export const getBanners = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "failed",
-            error: "Internal server error"
+            message: "Internal server error"
         });
     }
 }
@@ -32,7 +32,7 @@ export const getServices = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "failed",
-            error: "Internal server error"
+            message: "Internal server error"
         });
     }
 }

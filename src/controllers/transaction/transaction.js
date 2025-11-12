@@ -25,7 +25,7 @@ export const getBalance = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "failed",
-            error: "Internal server error"
+            message: "Internal server error"
         });
     }
 }
@@ -82,11 +82,11 @@ export const topUp = async (req, res) => {
                 }
             }
         } catch (rollbackError) {
-            console.error('Rollback error:', rollbackError);
+            console.error('Rollback message:', rollbackError);
         }
         res.status(500).json({
             status: "failed",
-            error: "Internal server error"
+            message: "Internal server error"
         });
     } finally {
         if (connection) connection.release();
@@ -167,11 +167,11 @@ export const payment = async (req, res) => {
                 }
             }
         } catch (rollbackError) {
-            console.error('Rollback error:', rollbackError);
+            console.error('Rollback message:', rollbackError);
         } finally {
             res.status(500).json({
                 status: "failed",
-                error: "Internal server error"
+                message: "Internal server error"
             });
         }
     } finally {
@@ -195,7 +195,7 @@ export const getHistories = async (req, res) => {
   } catch (error) {
     res.status(500).json({
         status: "failed",
-        error: "Internal server error"
+        message: "Internal server error"
     });
   }
 };

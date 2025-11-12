@@ -37,7 +37,7 @@ export const login = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "failed",
-            error: "Internal server error"
+            message: "Internal server error"
         });
     }
 }
@@ -49,7 +49,7 @@ export const register = async (req, res) => {
         if (findingUser) {
             res.status(409).json({  
                 status: "failed",
-                error: "Email has been used"
+                message: "Email has been used"
             });
             return;
         }
@@ -66,7 +66,7 @@ export const register = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "failed",
-            error: "Internal server error"
+            message: "Internal server error"
         });
     }
 }
@@ -95,7 +95,7 @@ export const getProfile = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "failed",
-            error: "Internal server error"
+            message: "Internal server error"
         });
     }
 }
@@ -127,7 +127,7 @@ export const updateProfile = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "failed",
-            error: "Internal server error"
+            message: "Internal server error"
         });
     }
 }
@@ -161,7 +161,7 @@ export const uploadImage = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "failed",
-            error: "Internal server error"
+            message: "Internal server error"
         });
     }
 };
