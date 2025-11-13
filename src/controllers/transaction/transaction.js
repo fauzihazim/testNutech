@@ -182,18 +182,12 @@ export const payment = async (req, res) => {
 export const getHistories = async (req, res) => {
     try {
         const userId = res.locals.userId;
-        const offset = parseInt(req.query.offset) || 0;
-        const limit = parseInt(req.query.limit) || 10;
-        
         const history = await getTransactionHistory(userId);
-        console.log("Sukses sampai sini");
-    
-    
-    res.status(200).json({
-      status: 0,
-      message: "Get History Berhasil",
-      data: history
-    });
+        res.status(200).json({
+            status: 0,
+            message: "Get History Berhasil",
+            data: history
+        });
   } catch (error) {
     res.status(500).json({
         status: "failed",
@@ -222,7 +216,6 @@ const getTransactionHistory = async (userId) => {
     LEFT JOIN payments p ON t.id = p.idTransaction AND t.transaction_type = 'PAYMENT'
     WHERE t.idUser = ?
     ORDER BY t.id DESC`, [userId]);
-    console.log("record ", records);
 
     return records;
 };

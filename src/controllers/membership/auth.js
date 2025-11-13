@@ -161,7 +161,7 @@ export const uploadImage = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "failed",
-            message: "Internal server error"
+            error: "Internal server error"
         });
     }
 };

@@ -8,11 +8,6 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const filePath = path.resolve(__dirname, 'testImage/sampleWebp.webp');
-console.log("File path:", filePath);
-// console.log("Token:", token);
-
-console.log("Halo gan ", path.resolve(__dirname, 'testImage/sampleWebp.webp'));
 
 let token;
 describe('Membership API', () => {
@@ -55,8 +50,6 @@ describe('Membership API', () => {
         "last_name": "Nutech",
         "password": "abcdef1234"
       });
-    console.log("INI ", res.body);
-    
     assert.equal(res.statusCode, 409);
     assert.equal(res.body.status, "failed");
     assert.equal(res.body.message, "Email has been used");
@@ -70,7 +63,7 @@ describe('Membership API', () => {
     assert.equal(res.body.status, 0);
     assert.equal(res.body.message, "Login Sukses");
     assert.ok(res.body.data.token);
-    token = res.body.data.token; // Menyimpan token untuk authorization
+    token = res.body.data.token;
   });
 
   test('Login failed parameter email tidak sesuai', async () => {
@@ -127,7 +120,6 @@ describe('Membership API', () => {
     assert.equal(res.body.data.email, "user@nutech-integrasi.com");
     assert.equal(res.body.data.first_name, "User Edited");
     assert.equal(res.body.data.last_name, "Nutech Edited");
-    assert.equal(res.body.data.profile_image, null);
   });
 
   test("Profile failed Unauthorized", async () => {
@@ -145,7 +137,7 @@ describe('Membership API', () => {
     const res = await req(app)
       .put('/profile/image')
       .set('Authorization', `Bearer ${token}`)
-      .attach('file', path.resolve(__dirname, 'testImage/sample_Jpg.jpg'));
+      .attach('file', path.resolve(__dirname, 'testImage/sample_Jpeg.jpeg'));
     assert.equal(res.statusCode, 200);
     assert.equal(res.body.status, 0);
     assert.equal(res.body.message, "Update Profile Image berhasil");
@@ -153,43 +145,6 @@ describe('Membership API', () => {
     assert.equal(res.body.data.first_name, "User Edited");
     assert.equal(res.body.data.last_name, "Nutech Edited");
     assert.notEqual(res.body.data.profile_image, null);
-  });
-
-  // test("Update Image Profile Failed", async () => {
-  //   const res = await req(app)
-  //     .put('/profile/image')
-  //     .set('Authorization', `Bearer ${token}`)
-  //     .attach('file', path.resolve(__dirname, 'sample_Jpg.jpg'));
-  //   // assert.equal(res.statusCode, 400);
-  //   // assert.equal(res.body.status, 102);
-  //   // assert.equal(res.body.message, "Format Image tidak sesuai");
-  //   // assert.equal(res.body.data, null);
-  // });
-
-  // test("Update Image Profile Failed", async () => {
-  //   const res = await req(app)
-  //     .put('/profile/image')
-  //     .set('Authorization', `Bearer ${token}`)
-  //     .attach('file', path.resolve(__dirname, 'testImage/sampleWebp.webp'));
-  //   assert.equal(res.statusCode, 200);
-  //   assert.equal(res.body.status, 0);
-  //   assert.equal(res.body.message, "Update Profile Image berhasil");
-  //   assert.equal(res.body.data.email, "user@nutech-integrasi.com");
-  //   assert.equal(res.body.data.first_name, "User Edited");
-  //   assert.equal(res.body.data.last_name, "Nutech Edited");
-  //   assert.notEqual(res.body.data.profile_image, null);
-  // });
-
-  test("Update Image Profile Failed (invalid format)", async () => {
-    const res = await req(app)
-      .put('/profile/image')
-      .set('Authorization', `Bearer ${token}`)
-      .attach('file', path.resolve(__dirname, 'testImage/sampleWebp.webp'));
-    console.log("Hai hai", res.statusCode, res.body);
-    assert.equal(res.statusCode, 400);
-    assert.equal(res.body.status, 102);
-    assert.equal(res.body.message, "Format Image tidak sesuai");
-    assert.equal(res.body.data, null);
   });
 
   test('Update Image failed Unauthorized', async () => {

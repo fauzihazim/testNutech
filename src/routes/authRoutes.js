@@ -10,5 +10,5 @@ app.post('/login', loginValidator, login);
 app.post('/register', registerValidator, register);
 app.get('/profile', authenticateAccessToken, getProfile);
 app.put('/profile/update', authenticateAccessToken, updateProfile);
-app.put('/profile/image', authenticateAccessToken, fileUploadMiddleware, uploadImage, handleUploadErrors);
+app.put('/profile/image', authenticateAccessToken, fileUploadMiddleware, handleUploadErrors, uploadImage);
 export default app;
